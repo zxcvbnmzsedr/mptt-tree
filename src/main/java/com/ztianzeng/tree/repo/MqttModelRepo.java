@@ -153,31 +153,33 @@ public class MqttModelRepo extends ServiceImpl<MpttModelMapper, MpttModel> {
         long childLft;
         long childRgt;
         String nodeId = parent.getNodeId();
+        String tableName = getTableName(child);
         // 寻找右边最大的子节点
-        MpttModel rightMostChild = mapper.findRightMostChild("", nodeId, parent.getRgt() - 1);
+        MpttModel rightMostChild = mapper.findRightMostChild(tableName, nodeId, parent.getRgt() - 1);
 
         if (rightMostChild == null) {
             childLft = parent.getLft() + 1;
             childRgt = childLft + 1;
 
             incrementEntitiesLft(
-                    mapper.findEntitiesWithLeftGreaterThanOrEqual("", nodeId, childLft), 2L);
+                    mapper.findEntitiesWithLeftGreaterThanOrEqual(tableName, nodeId, childLft), 2L);
             incrementEntitiesRgt(
-                    mapper.findEntitiesWhichRgtIsGreaterThan("", nodeId, parent.getLft()), 2L);
+                    mapper.findEntitiesWhichRgtIsGreaterThan(tableName, nodeId, parent.getLft()), 2L);
         } else {
             childLft = rightMostChild.getRgt() + 1;
             childRgt = childLft + 1;
 
             incrementEntitiesLft(
-                    mapper.findEntitiesWhichLftIsGreaterThan("", nodeId, rightMostChild.getRgt()), 2L);
+                    mapper.findEntitiesWhichLftIsGreaterThan(tableName, nodeId, rightMostChild.getRgt()), 2L);
             incrementEntitiesRgt(
-                    mapper.findEntitiesWhichRgtIsGreaterThan("", nodeId, rightMostChild.getRgt()), 2L);
+                    mapper.findEntitiesWhichRgtIsGreaterThan(tableName, nodeId, rightMostChild.getRgt()), 2L);
         }
 
         child.setLft(childLft);
         child.setRgt(childRgt);
         child.setNodeId(parent.getNodeId());
         child.setParentId(parentId);
+        child.setLevel(parent.getLevel() + 1);
 
         save(child);
 

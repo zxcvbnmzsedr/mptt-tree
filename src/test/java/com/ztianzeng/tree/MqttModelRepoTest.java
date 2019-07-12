@@ -31,8 +31,8 @@ public class MqttModelRepoTest {
         MpttModel root = new MpttModel("root");
         repo.addRoot(root);
 
-        assertThat(root.getLft(), equalTo(1l));
-        assertThat(root.getRgt(), equalTo(2l));
+        assertThat(root.getLft(), equalTo(1L));
+        assertThat(root.getRgt(), equalTo(2L));
         assertThat(root.getLevel(), equalTo(0L));
     }
 
@@ -49,6 +49,23 @@ public class MqttModelRepoTest {
 
         }
 
+    }
 
+    @Test
+    public void add_first_child_to_root() {
+        MpttModel root = new MpttModel("root");
+        MpttModel child = new MpttModel("child");
+
+        repo.addRoot(root);
+        repo.addChild(root.getId(), child);
+
+        Long id = root.getId();
+        root = repo.get(id);
+        assertThat(root.getLft(), equalTo(1L));
+        assertThat(root.getRgt(), equalTo(4L));
+
+        assertThat(child.getLft(), equalTo(2L));
+        assertThat(child.getRgt(), equalTo(3L));
+        assertThat(child.getLevel(), equalTo(1L));
     }
 }
