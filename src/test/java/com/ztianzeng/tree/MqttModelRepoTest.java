@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -28,6 +27,9 @@ public class MqttModelRepoTest {
     @Autowired
     public MqttModelRepo repo;
 
+    /**
+     * 创建根节点
+     */
     @Test
     public void should_set_root_when_there_is_none() {
         String rootS = getRandomRoot();
@@ -39,6 +41,9 @@ public class MqttModelRepoTest {
         assertThat(root.getLevel(), equalTo(0L));
     }
 
+    /**
+     * 不允许创建多个相同的根节点
+     */
     @Test
     public void fails_to_set_as_root_when_root_already_exists() {
 
@@ -55,6 +60,9 @@ public class MqttModelRepoTest {
 
     }
 
+    /**
+     * 创建根节点之后添加子节点
+     */
     @Test
     public void add_first_child_to_root() {
         String rootS = getRandomRoot();
@@ -74,6 +82,9 @@ public class MqttModelRepoTest {
         assertThat(child.getLevel(), equalTo(1L));
     }
 
+    /**
+     * 添加多个子节点
+     */
     @Test
     public void should_add_child_to_child_to_root() {
         String rootS = getRandomRoot();
@@ -103,8 +114,11 @@ public class MqttModelRepoTest {
     }
 
 
+    /**
+     * 删除节点
+     */
     @Test
-    public void should_remove_the_only_child_of_hierarchy_root() {
+    public void should_remove_the_only_child() {
         String rootS = getRandomRoot();
         MpttModel root = new MpttModel(rootS);
         MpttModel child = new MpttModel(rootS);
@@ -113,8 +127,10 @@ public class MqttModelRepoTest {
         repo.addChild(root.getId(), child);
         repo.remove(child.getId());
 
-        assertThat(root.getLft(), equalTo(1l));
-        assertThat(root.getRgt(), equalTo(2l));
+        root = repo.get(root.getId());
+        assertThat(root.getLft(), equalTo(1L));
+        assertThat(root.getRgt(), equalTo(2L));
+        assertThat(root.getLevel(), equalTo(0L));
 
     }
 
