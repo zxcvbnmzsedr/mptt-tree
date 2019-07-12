@@ -5,8 +5,11 @@
 package com.ztianzeng.tree.repo;
 
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ztianzeng.tree.entity.MpttModel;
+import com.ztianzeng.tree.exception.MqttException;
 import com.ztianzeng.tree.mapper.MpttModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -46,6 +49,10 @@ public class MqttModelRepo extends ServiceImpl<MpttModelMapper, MpttModel> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void addRoot(MpttModel add) {
+        MpttModel one = mapper.getByParentId(getTableName(add), add.getNodeId(), 0L);
+        if (one != null) {
+            throw new MqttException("无法设置多个根节点");
+        }
         setRoot(add, add.getNodeId());
     }
 
@@ -252,6 +259,17 @@ public class MqttModelRepo extends ServiceImpl<MpttModelMapper, MpttModel> {
     @Transactional(rollbackFor = Exception.class)
     public void update(MpttModel manageDepartmentDO) {
         updateById(manageDepartmentDO);
+    }
+
+    /**
+     * 获取表名
+     *
+     * @param model model
+     * @return 表明
+     */
+    private String getTableName(Model model) {
+        TableName annotation = model.getClass().getAnnotation(TableName.class);
+        return annotation.value();
     }
 
 

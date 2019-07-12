@@ -1,5 +1,6 @@
 package com.ztianzeng.tree.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
@@ -11,7 +12,8 @@ import java.io.Serializable;
  * @version V1.0
  * @date 2019-07-12 14:37
  */
-public class MpttModel<T extends Model<?>> extends Model<T> {
+@TableName("mptt_model")
+public class MpttModel extends Model<MpttModel> {
     private Long id;
     /**
      * 层级

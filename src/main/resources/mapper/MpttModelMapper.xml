@@ -61,8 +61,8 @@
          <![CDATA[
         SELECT child.*
         FROM ${tableName} child
-        WHERE child.node_id = #{child.nodeId}
-          AND #{parentId} < child.parent_id
+        WHERE child.node_id = #{nodeId}
+          AND #{parentId} = child.parent_id
         ]]>
     </select>
 

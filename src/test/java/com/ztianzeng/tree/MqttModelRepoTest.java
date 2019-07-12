@@ -1,6 +1,7 @@
 package com.ztianzeng.tree;
 
 import com.ztianzeng.tree.entity.MpttModel;
+import com.ztianzeng.tree.exception.MqttException;
 import com.ztianzeng.tree.repo.MqttModelRepo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,5 +34,21 @@ public class MqttModelRepoTest {
         assertThat(root.getLft(), equalTo(1l));
         assertThat(root.getRgt(), equalTo(2l));
         assertThat(root.getLevel(), equalTo(0L));
+    }
+
+    @Test
+    public void fails_to_set_as_root_when_root_already_exists() {
+
+        MpttModel root = new MpttModel("root");
+        repo.addRoot(root);
+
+        try {
+            MpttModel root2 = new MpttModel("root");
+            repo.addRoot(root2);
+        } catch (MqttException mq) {
+
+        }
+
+
     }
 }
