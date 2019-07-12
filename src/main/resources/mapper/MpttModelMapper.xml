@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ztianzeng.tree.mapper.MpttModelMapper">
+
+
+    <select id="findRightMostChild" resultType="com.ztianzeng.tree.entity.MpttModel">
+        SELECT tree.*
+        FROM ${tableName} tree
+        WHERE #{nodeId} = tree.node_id
+          AND tree.rgt = #{rgt}
+    </select>
+    <select id="findEntitiesWithLeftGreaterThanOrEqual" resultType="com.ztianzeng.tree.entity.MpttModel">
+        SELECT tree.*
+        FROM ${tableName} tree
+        WHERE #{nodeId} = tree.node_id
+        <![CDATA[
+          AND #{lft} <= tree.lft
+        ]]>
+    </select>
+    <select id="findEntitiesWhichRgtIsGreaterThan" resultType="com.ztianzeng.tree.entity.MpttModel">
+        SELECT tree.*
+        FROM ${tableName} tree
+        WHERE #{nodeId} = tree.node_id
+        <![CDATA[
+          AND #{rgt} < tree.rgt
+        ]]>
+    </select>
+    <select id="findEntitiesWhichLftIsGreaterThan" resultType="com.ztianzeng.tree.entity.MpttModel">
+        SELECT tag.*
+        FROM ${tableName} tree
+        WHERE #{nodeId} = tree.node_id
+        <![CDATA[
+          AND #{lft} < tag.lft
+        ]]>
+    </select>
+    <select id="findSubTree" resultType="com.ztianzeng.tree.entity.MpttModel">
+        <![CDATA[
+        SELECT tag.*
+        FROM ${tableName} tree
+        WHERE #{nodeId} = tree.node_id
+          AND #{child.lft} <= tree.lft
+          AND tree.rgt <= #{child.rgt}
+        ]]>
+    </select>
+    <select id="findChildren" resultType="com.ztianzeng.tree.entity.MpttModel">
+        <![CDATA[
+        SELECT child.*
+        FROM ${tableName} child
+        WHERE child.node_id = #{child.nodeId}
+          AND #{child.lft} < child.lft
+          AND child.rgt < #{child.rgt}
+          AND #{child.lft} = (SELECT MAX(ancestor.lft)
+                              FROM ${tableName} ancestor
+                              WHERE ancestor.node_id = child.node_id
+                                AND ancestor.lft < child.lft
+                                AND child.rgt < ancestor.rgt)
+        ORDER BY child.lft ASC
+        ]]>
+    </select>
+    <select id="getByParentId" resultType="com.ztianzeng.tree.entity.MpttModel">
+         <![CDATA[
+        SELECT child.*
+        FROM ${tableName} child
+        WHERE child.node_id = #{child.nodeId}
+          AND #{parentId} < child.parent_id
+        ]]>
+    </select>
+
+
+</mapper>
