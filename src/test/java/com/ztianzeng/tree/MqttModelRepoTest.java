@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -98,6 +99,22 @@ public class MqttModelRepoTest {
         assertThat(level2Child.getLft(), equalTo(3L));
         assertThat(level2Child.getRgt(), equalTo(4L));
         assertThat(level2Child.getLevel(), equalTo(2L));
+
+    }
+
+
+    @Test
+    public void should_remove_the_only_child_of_hierarchy_root() {
+        String rootS = getRandomRoot();
+        MpttModel root = new MpttModel(rootS);
+        MpttModel child = new MpttModel(rootS);
+
+        repo.addRoot(root);
+        repo.addChild(root.getId(), child);
+        repo.remove(child.getId());
+
+        assertThat(root.getLft(), equalTo(1l));
+        assertThat(root.getRgt(), equalTo(2l));
 
     }
 

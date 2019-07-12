@@ -60,7 +60,7 @@ public interface MpttModelMapper extends BaseMapper<MpttModel> {
      * @param child the child
      * @return the set
      */
-    Set<MpttModel> findSubTree(@Param("child") MpttModel child);
+    Set<MpttModel> findSubTree(@Param("tableName") String tableName, @Param("child") MpttModel child);
 
 
     /**

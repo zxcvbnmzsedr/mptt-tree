@@ -65,7 +65,8 @@ public class MqttModelRepo extends ServiceImpl<MpttModelMapper, MpttModel> {
     public void remove(Long childId) {
         //判断部门下面是否还有子部门，有则不能删除
         MpttModel child = get(childId);
-        Set<MpttModel> childSubTree = mapper.findSubTree(child);
+        String tableName = getTableName(child);
+        Set<MpttModel> childSubTree = mapper.findSubTree(tableName, child);
 
 
         String nodeId = child.getNodeId();
@@ -73,9 +74,9 @@ public class MqttModelRepo extends ServiceImpl<MpttModelMapper, MpttModel> {
 
 
         decrementEntitiesLftWith(
-                mapper.findEntitiesWhichLftIsGreaterThan("", nodeId, child.getRgt()), decrement);
+                mapper.findEntitiesWhichLftIsGreaterThan(tableName, nodeId, child.getRgt()), decrement);
         decrementEntitiesRgtWith(
-                mapper.findEntitiesWhichRgtIsGreaterThan("", nodeId, child.getRgt()), decrement);
+                mapper.findEntitiesWhichRgtIsGreaterThan(tableName, nodeId, child.getRgt()), decrement);
 
         resetEntities(childSubTree);
 

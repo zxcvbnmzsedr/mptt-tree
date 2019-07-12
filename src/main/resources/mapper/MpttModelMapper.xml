@@ -26,18 +26,18 @@
         ]]>
     </select>
     <select id="findEntitiesWhichLftIsGreaterThan" resultType="com.ztianzeng.tree.entity.MpttModel">
-        SELECT tag.*
+        SELECT tree.*
         FROM ${tableName} tree
         WHERE #{nodeId} = tree.node_id
         <![CDATA[
-          AND #{lft} < tag.lft
+          AND #{lft} < tree.lft
         ]]>
     </select>
     <select id="findSubTree" resultType="com.ztianzeng.tree.entity.MpttModel">
         <![CDATA[
-        SELECT tag.*
+        SELECT tree.*
         FROM ${tableName} tree
-        WHERE #{nodeId} = tree.node_id
+        WHERE #{child.nodeId} = tree.node_id
           AND #{child.lft} <= tree.lft
           AND tree.rgt <= #{child.rgt}
         ]]>
