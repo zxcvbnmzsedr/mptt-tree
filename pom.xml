@@ -42,23 +42,6 @@
         </dependency>
     </dependencies>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configLocation>http://gitlab.cnabc-inc.com/open-source/checkStyle/raw/master/check.xml</configLocation>
-                </configuration>
-            </plugin>
-        </plugins>
+
     </build>
 </project>
